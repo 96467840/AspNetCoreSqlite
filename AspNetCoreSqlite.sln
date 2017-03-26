@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{441AF31F-77C6-4701-9211-D295C099D2C8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2428E9A6-8BD2-4313-9BDA-373860073545}"
+	ProjectSection(SolutionItems) = preProject
+		docs.txt = docs.txt
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCoreSqlite", "src\AspNetCoreSqlite\AspNetCoreSqlite.csproj", "{87219B50-5B62-40F0-A085-BFC1375C2F8E}"
 	ProjectSection(ProjectDependencies) = postProject

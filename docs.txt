@@ -1,0 +1,4 @@
+
+вытащить БД
+
+Scaffold-DbContext "Server=..\\AspNetCore\\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
