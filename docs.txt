@@ -1,4 +1,15 @@
+установить https://system.data.sqlite.org/index.html/doc/trunk/www/downloads.wiki
+поставил (Setups for 64-bit Windows (.NET Framework 4.6))
+удалил. трабла в другом: Startup project 'src\AspNetCoreSqlite' targets framework '.NETStandard'. This framework is not intended for execution and may fail to resolve runtime dependencies. If so, select a different startup project and try again.
+
+решение создать консольное приложение и тягать БД в него. как обычно через Жопу!
+
+Install-Package Microsoft.EntityFrameworkCore.Sqlite
+Install-Package Microsoft.EntityFrameworkCore.Tools
+Install-Package Microsoft.EntityFrameworkCore.Sqlite.Design
+
 
 вытащить БД
+Scaffold-DbContext "Filename=..\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
+Scaffold-DbContext "Filename=d:\internet\github\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
 
-Scaffold-DbContext "Server=..\\AspNetCore\\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
