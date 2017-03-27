@@ -13,3 +13,5 @@ Install-Package Microsoft.EntityFrameworkCore.Sqlite.Design
 Scaffold-DbContext "Filename=..\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
 Scaffold-DbContext "Filename=d:\internet\github\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
 
+
+документация https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
