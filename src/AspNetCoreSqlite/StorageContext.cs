@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AspNetCoreSqlite
+namespace AspNetCoreSqlite.DBModels
 {
-    public class StorageContext : DbContext, IStorageContext
+    public partial class StorageContext : DbContext, IStorageContext
     {
         private string connectionString;
 
@@ -22,7 +22,7 @@ namespace AspNetCoreSqlite
             optionsBuilder.UseSqlite(this.connectionString);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Site>(etb =>
@@ -32,6 +32,6 @@ namespace AspNetCoreSqlite
                 etb.ForSqliteToTable("Sites");
             }
             );
-        }
+        }*/
     }
 }

@@ -11,7 +11,13 @@ Install-Package Microsoft.EntityFrameworkCore.Sqlite.Design
 
 вытащить БД
 Scaffold-DbContext "Filename=..\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
-Scaffold-DbContext "Filename=d:\internet\github\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
+Scaffold-DbContext "Filename=d:\internet\github\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force
 
 
 документация https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
+
+статья на русском "Доступ к данным - EF7-миграции: не новые, но определенно улучшенные"
+https://msdn.microsoft.com/ru-ru/magazine/mt614250.aspx
+
+get-help Scaffold-DbContext
+get-help Scaffold-DbContext -detailed
