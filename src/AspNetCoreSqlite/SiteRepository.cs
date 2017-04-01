@@ -6,23 +6,26 @@ using AspNetCoreComponentLibrary;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using AspNetCoreSqlite.DBModels;
+using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace AspNetCoreSqlite
 {
-    public class SiteRepository : ISiteRepository
+    public class SiteRepository : BaseRepositorySQLite<long, Sites>, ISiteRepository//<long, Sites>
     {
-        private StorageContext storageContext;
-        private DbSet<Sites> dbSet;
 
-        public void SetStorageContext(IStorageContext storageContext)
+        /*public IEnumerable<Sites> All()
         {
-            this.storageContext = storageContext as StorageContext;
-            this.dbSet = this.storageContext.Set<Sites>();
-        }
+            //(Storage as Storage)._logger.LogInformation("try get All");
+            return this.dbSet.OrderBy(i => i.Id);//.Select(i=>i.ToDC(Storage));
+        }*/
 
-        public IEnumerable<Site> All()
+        /*public Sites Get(long id)
         {
-            return this.dbSet.OrderBy(i => i.Id).Select(i=>new Site { Id=i.Id, Name=i.Name});
-        }
+            return dbSet.Where(i => i.Id == id)
+            //.Select(i=>i.ToDC(Storage))
+            .FirstOrDefault();
+        }/**/
+
     }
 }

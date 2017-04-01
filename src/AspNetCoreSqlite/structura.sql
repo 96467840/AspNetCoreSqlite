@@ -8,12 +8,12 @@
   
 	Token varchar(255) NULL UNIQUE,
   
-	vkId varchar(255) NULL UNIQUE,
-	vkToken varchar(255),
-	vkExpires datetime,
-	fbId varchar(255) NULL UNIQUE,
-	fbToken varchar(255),
-	fbExpires datetime
+	VkId varchar(255) NULL UNIQUE,
+	VkToken varchar(255),
+	VkExpires datetime,
+	FbId varchar(255) NULL UNIQUE,
+	FbToken varchar(255),
+	FbExpires datetime
 );
 
 CREATE UNIQUE INDEX Email ON Users (

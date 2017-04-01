@@ -1,13 +1,15 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using AspNetCoreComponentLibrary;
 
 namespace AspNetCoreSqlite.DBModels
 {
     public partial class StorageContext : DbContext
     {
-        public virtual DbSet<Sites> Sites { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        //public virtual DbSet<Sites> Sites { get; set; }
+        //public virtual DbSet<Users> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,18 +48,13 @@ namespace AspNetCoreSqlite.DBModels
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.FbExpires)
-                    .HasColumnName("fbExpires")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.FbExpires).HasColumnType("datetime");
 
                 entity.Property(e => e.FbId)
                     .IsRequired()
-                    .HasColumnName("fbId")
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.FbToken)
-                    .HasColumnName("fbToken")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.FbToken).HasColumnType("varchar(255)");
 
                 entity.Property(e => e.Name).HasColumnType("varchar(255)");
 
@@ -69,18 +66,13 @@ namespace AspNetCoreSqlite.DBModels
                     .IsRequired()
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.VkExpires)
-                    .HasColumnName("vkExpires")
-                    .HasColumnType("datetime");
+                entity.Property(e => e.VkExpires).HasColumnType("datetime");
 
                 entity.Property(e => e.VkId)
                     .IsRequired()
-                    .HasColumnName("vkId")
                     .HasColumnType("varchar(255)");
 
-                entity.Property(e => e.VkToken)
-                    .HasColumnName("vkToken")
-                    .HasColumnType("varchar(255)");
+                entity.Property(e => e.VkToken).HasColumnType("varchar(255)");
             });
         }
     }

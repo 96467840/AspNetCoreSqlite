@@ -1,4 +1,5 @@
-﻿using AspNetCoreComponentLibrary.Abstractions;
+﻿using AspNetCoreComponentLibrary;
+using AspNetCoreComponentLibrary.Abstractions;
 using AspNetCoreSqlite.DBModels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AspNetCoreSqlite
 {
@@ -34,7 +36,8 @@ namespace AspNetCoreSqlite
             _logger.LogInformation(message, args);
         }
 
-        public T GetRepository<T>() where T : IRepository
+        public T GetRepository<T>() where T : IRepositorySetStorageContext
+
         {
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
             {
@@ -42,17 +45,17 @@ namespace AspNetCoreSqlite
                 {
                     T repository = (T)Activator.CreateInstance(type);
 
-                    repository.SetStorageContext(this.StorageContext);
+                    repository.SetStorageContext(this.StorageContext, this);
                     return repository;
                 }
             }
-
+            _logger.LogCritical("Can't find repository {0}", typeof(T).FullName);
             return default(T);
         }
 
-        public void Save()
+        public int Save()
         {
-            this.StorageContext.SaveChanges();
+            return this.StorageContext.SaveChanges();
         }
     }
 }
