@@ -14,7 +14,9 @@ Scaffold-DbContext "Filename=..\AspNetCore\_db.sqlite" Microsoft.EntityFramework
 Scaffold-DbContext "Filename=d:\internet\github\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force
 
 
-документация https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
+документация 
+https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
+https://docs.microsoft.com/ru-ru/ef/core/index
 
 статья на русском "Доступ к данным - EF7-миграции: не новые, но определенно улучшенные"
 https://msdn.microsoft.com/ru-ru/magazine/mt614250.aspx

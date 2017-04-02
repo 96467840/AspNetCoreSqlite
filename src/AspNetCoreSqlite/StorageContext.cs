@@ -1,6 +1,7 @@
 ﻿using AspNetCoreComponentLibrary;
 using AspNetCoreComponentLibrary.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,15 +11,20 @@ namespace AspNetCoreSqlite.DBModels
     public partial class StorageContext : DbContext, IStorageContext
     {
         private string connectionString;
+        private readonly ILoggerFactory loggerFactory;
 
-        public StorageContext(string connectionString)
+        public StorageContext(string connectionString, ILoggerFactory loggerFactory)
         {
             this.connectionString = connectionString;
+            this.loggerFactory = loggerFactory;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.UseLoggerFactory(loggerFactory);
+
             optionsBuilder.UseSqlite(this.connectionString);
         }
 

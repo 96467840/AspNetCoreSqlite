@@ -13,17 +13,16 @@ namespace AspNetCoreSqlite
 {
     public class Storage : IStorage
     {
-        public readonly ILogger<StorageContext> _logger;
+        public readonly ILogger<Storage> _logger;
         public StorageContext StorageContext { get; private set; }
 
-        public Storage(ILogger<StorageContext> logger, IOptions<SQLiteConfigure> optionsAccessor)
+        public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor)
         {
             _logger = logger;
             try
             {
-                LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
-                //this.StorageContext = new StorageContext("Data Source=..\\..\\..\\db.sqlite");
-                this.StorageContext = new StorageContext(optionsAccessor.Value.ConnectionString);
+                //LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
+                StorageContext = new StorageContext(optionsAccessor.Value.ConnectionString, loggerFactory);
             }
             catch (Exception e)
             {
@@ -53,9 +52,9 @@ namespace AspNetCoreSqlite
             return default(T);
         }
 
-        public int Save()
+        public void Save()
         {
-            return this.StorageContext.SaveChanges();
+            this.StorageContext.SaveChangesAsync().Wait();
         }
     }
 }

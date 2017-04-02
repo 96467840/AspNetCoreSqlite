@@ -1,6 +1,8 @@
 ﻿using AspNetCoreComponentLibrary;
+using AspNetCoreComponentLibrary.Abstractions;
 using AspNetCoreSqlite.DBModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,26 +24,51 @@ namespace AspNetCoreSqlite
             }
         }
 
+        public override void LoadFromDB()
+        {
+            (Storage as Storage)._logger.LogInformation("LoadFromDB");
+            Coll =  this.dbSet.ToDictionary(i=>i.Id.Value, i=>i);
+        }
+
         public IEnumerable<T> AllFromDB()
         {
-            //(Storage as Storage)._logger.LogInformation("try get All");
+            (Storage as Storage)._logger.LogInformation("AllFromDB");
             return this.dbSet.OrderBy(i => i.Id);//.Select(i=>i.ToDC(Storage));
         }
 
-        public override K? Save(T site)
+        public override K Save(T item)
         {
-            if (site == null) throw new ArgumentNullException();
-            if (site.Id.HasValue)
+            if (item == null) throw new ArgumentNullException();
+            if (item.Id.HasValue)
             {
-                dbSet.Update(site);
+                dbSet.Update(item);
             }
             else
             {
-                dbSet.Add(site);
+                dbSet.Add(item);
             }
             Storage.Save();
 
-            return site.Id;
+            CheckColl();
+            if (item.Id.HasValue) Coll[item.Id.Value] = item;
+
+            return item.Id.Value;
         }/**/
+
+        public override void SetBlock(K id, bool value)
+        {
+            if (typeof(T) is IBlockable)
+            {
+                T item = (T)Activator.CreateInstance(typeof(T));
+                item.Id = id;
+                ((IBlockable)item).IsBlocked = value;
+                dbSet.Update(item);
+                Storage.Save();
+
+                CheckColl();
+                Coll[id] = item;
+            }
+        }
+
     }
 }
