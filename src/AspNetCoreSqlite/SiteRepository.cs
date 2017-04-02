@@ -11,8 +11,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCoreSqlite
 {
-    public class SiteRepository : BaseRepositorySQLite<long, Sites>, ISiteRepository//<long, Sites>
+    public class SiteRepository : RepositorySQLite<long, Sites>, ISiteRepository
     {
-
     }
 }

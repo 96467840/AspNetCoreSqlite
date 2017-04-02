@@ -10,7 +10,7 @@ using System.Text;
 
 namespace AspNetCoreSqlite
 {
-    public class BaseRepositorySQLite<K,T> : BaseRepository<K, T> where K : struct where T: BaseDM<K>
+    public class RepositoryWithCacheSQLite<K,T> : RepositoryWithCache<K, T> where K : struct where T: BaseDM<K>
     {
         protected DbSet<T> _dbSet = null;
         protected DbSet<T> dbSet
@@ -30,11 +30,17 @@ namespace AspNetCoreSqlite
             Coll =  this.dbSet.ToDictionary(i=>i.Id.Value, i=>i);
         }
 
-        public IEnumerable<T> AllFromDB()
+        /*public IEnumerable<T> AllFromDB()
         {
             (Storage as Storage)._logger.LogInformation("AllFromDB");
             return this.dbSet.OrderBy(i => i.Id);//.Select(i=>i.ToDC(Storage));
-        }
+        }*/
+
+        public IQueryable<T> StartQuery()
+        {
+            //(Storage as Storage)._logger.LogInformation("AllFromDB");
+            return this.dbSet;//.OrderBy(i => i.Id);//.Select(i=>i.ToDC(Storage));
+        }/**/
 
         public override K Save(T item)
         {
@@ -68,6 +74,11 @@ namespace AspNetCoreSqlite
                 CheckColl();
                 Coll[id] = item;
             }
+        }
+
+        public override void Remove(K id)
+        {
+            throw new NotImplementedException();
         }
 
     }
