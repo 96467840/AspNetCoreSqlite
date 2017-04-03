@@ -8,10 +8,14 @@ using System.Linq;
 using AspNetCoreSqlite.DBModels;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+
 
 namespace AspNetCoreSqlite
 {
-    public class SiteRepository : RepositorySQLite<long, Sites>, ISiteRepository
+    //public class SiteRepository : RepositoryWithCache<long, Sites>, ISiteRepository
+    public class SiteRepository : Repository<long, Sites>, ISiteRepository
     {
+
     }
 }
