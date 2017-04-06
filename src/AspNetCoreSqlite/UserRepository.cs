@@ -6,8 +6,7 @@ using System.Text;
 
 namespace AspNetCoreSqlite
 {
-    // реализуем частичное кеширование. в кеше храним тока последних юзеров (за 1 день)
-    public class UserRepository : RepositoryWithCache<long, Users>, IUserRepository
+    public class UserRepository : UserRepositoryProto
     {
 
     }
