@@ -14,16 +14,26 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
+  </ItemGroup>
+  
   <ItemGroup>
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.1" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\AspNetCoreComponentLibrary\src\AspNetCoreComponentLibrary\AspNetCoreComponentLibrary.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NETCore.App" Version="1.1.1" />
   </ItemGroup>
 
 </Project>

@@ -13,6 +13,12 @@ namespace AspNetCoreSqlite.DBModels
         private string connectionString;
         private readonly ILoggerFactory loggerFactory;
 
+        // конструктор для миграций
+        public StorageContext()
+        {
+            this.connectionString = "Data Source=..\\..\\..\\..\\..\\_db_1.sqlite";
+        }
+
         public StorageContext(string connectionString, ILoggerFactory loggerFactory)
         {
             this.connectionString = connectionString;
