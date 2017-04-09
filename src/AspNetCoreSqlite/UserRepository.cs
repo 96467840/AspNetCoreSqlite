@@ -6,7 +6,7 @@ using System.Text;
 
 namespace AspNetCoreSqlite
 {
-    public class UserRepository : UserRepositoryProto
+    public class UserRepository : UserRepositoryProto, IUserRepository
     {
 
     }

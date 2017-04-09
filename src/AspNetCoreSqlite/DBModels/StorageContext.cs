@@ -13,7 +13,6 @@ namespace AspNetCoreSqlite.DBModels
         public virtual DbSet<UserSites> UserSites { get; set; }
         public virtual DbSet<Users> Users { get; set; }
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Menus>(entity =>
@@ -197,8 +196,6 @@ namespace AspNetCoreSqlite.DBModels
 
                 entity.HasIndex(e => e.SiteId)
                     .HasName("News_SiteId");
-
-                entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.Content).HasColumnType("text");
 

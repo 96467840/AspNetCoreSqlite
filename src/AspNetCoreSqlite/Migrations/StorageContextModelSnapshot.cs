@@ -219,8 +219,7 @@ namespace AspNetCoreSqlite.Migrations
             modelBuilder.Entity("AspNetCoreComponentLibrary.News", b =>
                 {
                     b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
                         .HasColumnType("text");

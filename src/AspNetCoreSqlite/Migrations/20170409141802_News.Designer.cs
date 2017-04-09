@@ -8,7 +8,7 @@ using AspNetCoreSqlite.DBModels;
 namespace AspNetCoreSqlite.Migrations
 {
     [DbContext(typeof(StorageContext))]
-    [Migration("20170409084444_News")]
+    [Migration("20170409141802_News")]
     partial class News
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -220,8 +220,7 @@ namespace AspNetCoreSqlite.Migrations
             modelBuilder.Entity("AspNetCoreComponentLibrary.News", b =>
                 {
                     b.Property<long?>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("ID");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content")
                         .HasColumnType("text");

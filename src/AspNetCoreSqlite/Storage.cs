@@ -1,6 +1,7 @@
 ﻿using AspNetCoreComponentLibrary;
 using AspNetCoreComponentLibrary.Abstractions;
 using AspNetCoreSqlite.DBModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -80,6 +81,16 @@ namespace AspNetCoreSqlite
         public void Save()
         {
             this.StorageContext.SaveChangesAsync().Wait();
+        }
+
+        // данный код выполняется при запуске сайта и обновляет все БД сайтов
+        public void UpdateDBs()
+        {
+
+            StorageContext.Database.Migrate();
+            // теперь можем получить список сайтов и обновить все БД
+            // ...
+
         }
     }
 }

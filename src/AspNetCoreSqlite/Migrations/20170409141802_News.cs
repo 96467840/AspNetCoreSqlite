@@ -12,7 +12,7 @@ namespace AspNetCoreSqlite.Migrations
                 name: "News",
                 columns: table => new
                 {
-                    ID = table.Column<long>(nullable: false)
+                    Id = table.Column<long>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Content = table.Column<string>(type: "text", nullable: true),
                     Date = table.Column<DateTime>(type: "datetime", nullable: true),
@@ -33,7 +33,7 @@ namespace AspNetCoreSqlite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_News", x => x.ID);
+                    table.PrimaryKey("PK_News", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(

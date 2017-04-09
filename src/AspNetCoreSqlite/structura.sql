@@ -133,7 +133,7 @@ CREATE INDEX Menus_IsShowOnMain ON Menus ( IsShowOnMain );
 -- CREATE INDEX Menus_??? ON Menus ( ??? );
 
 CREATE TABLE News (
-  ID INTEGER PRIMARY KEY,
+  Id INTEGER PRIMARY KEY,
 
   SiteId integer NOT NULL,
 

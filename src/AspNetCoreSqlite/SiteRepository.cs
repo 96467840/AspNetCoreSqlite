@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 
 namespace AspNetCoreSqlite
 {
-    public class SiteRepository : SiteRepositoryProto
+    public class SiteRepository : SiteRepositoryProto, ISiteRepository
     {
 
     }
