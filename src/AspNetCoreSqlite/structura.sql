@@ -3,34 +3,35 @@
 	Created TIMESTAMP default CURRENT_TIMESTAMP,
 
 	Name varchar(255),
-	Email varchar(255) NOT NULL UNIQUE,
+	Email varchar(255) NOT NULL,
 	Password varchar(255) NOT NULL,
   
-	Token varchar(255) NULL UNIQUE,
+	Token varchar(255) NULL,
   
-	VkId varchar(255) NULL UNIQUE,
+	VkId varchar(255) NULL,
 	VkToken varchar(255),
 	VkExpires datetime,
-	FbId varchar(255) NULL UNIQUE,
+	FbId varchar(255) NULL,
 	FbToken varchar(255),
 	FbExpires datetime
 );
 
-CREATE UNIQUE INDEX Email ON Users (
-    Email
-);
+CREATE UNIQUE INDEX Users_Email ON Users ( Email );
+CREATE UNIQUE INDEX Users_VkId ON Users (VkId);
+CREATE UNIQUE INDEX Users_FbId ON Users (FbId);
+CREATE UNIQUE INDEX UsersToken ON Users ( Token );
 
-insert into Users (Name, Email, Password) values ('Andrey', '96467840@mail.ru', '');
+-- insert into Users (Name, Email, Password) values ('Andrey', '96467840@mail.ru', '');
 
 CREATE TABLE Sites (
 	Id INTEGER PRIMARY KEY,
 	Created TIMESTAMP default CURRENT_TIMESTAMP,
 
-	IsDefault tinyint  NOT NULL default 0,
-	IsVisible tinyint  NOT NULL default 0,
+	IsDefault tinyint NOT NULL default 0,
+	IsVisible tinyint NOT NULL default 0,
 	
 	Name varchar(255),
-	URL varchar(512),
+	Hosts text,
 	Description text,
 	Layout varchar(128),
 
@@ -55,16 +56,22 @@ CREATE TABLE Sites (
 	ExternalId varchar(100) DEFAULT NULL,
 	Favicon varchar(255) DEFAULT NULL
 );
+-- CREATE INDEX Sites_IsDefault ON Sites ( IsDefault );
+-- CREATE INDEX Sites_Host ON Sites ( Host );
+CREATE INDEX Sites_VkAppId ON Sites ( VkAppId );
+CREATE INDEX Sites_FbAppId ON Sites ( FbAppId );
+CREATE INDEX Sites_ExternalId ON Sites ( ExternalId );
 
 CREATE TABLE UserSites(
 	UserId INTEGER NOT NULL,
 	SiteId INTEGER NOT NULL,
-	IsAdmin tinyint default 0,
+	IsAdmin tinyint NOT NULL default 0,
 	Rights text,
 	PRIMARY KEY(UserId, SiteId),
 	FOREIGN KEY(SiteId) REFERENCES Sites(Id) ON UPDATE CASCADE ON DELETE CASCADE,
 	FOREIGN KEY(UserId) REFERENCES Users(Id) ON UPDATE CASCADE ON DELETE CASCADE
 );
+CREATE INDEX UserSites_IsAdmin ON UserSites ( IsAdmin );
 
 CREATE TABLE Menus (
   Id INTEGER PRIMARY KEY,
@@ -84,7 +91,7 @@ CREATE TABLE Menus (
   SeoTitle varchar(255) DEFAULT '',
   SeoKeywords varchar(1024) DEFAULT '',
   SeoDescription varchar(1024) DEFAULT '',
-  URL varchar(255) NOT NULL DEFAULT '',
+  URL varchar(512) NOT NULL DEFAULT '',
   Layout varchar(128) DEFAULT NULL,
 --  ArticlesId INTEGER DEFAULT NULL,
   InWWW tinyint NOT NULL DEFAULT 1,
@@ -115,4 +122,14 @@ CREATE TABLE Menus (
 -- мы не будем связывать таблицы  Sites и Users с другими таблицами так как поместим их в отдельную БД
 -- alter table Sites Add OrderPageId INTEGER REFERENCES Menus(Id) ON UPDATE CASCADE ON DELETE SET NULL;
 -- alter table Sites Add E404PageId  INTEGER REFERENCES Menus(Id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+CREATE INDEX Menus_SiteId ON Menus ( SiteId );
+CREATE INDEX Menus_ParentId ON Menus ( ParentId );
+CREATE INDEX Menus_Page ON Menus ( Page );
+CREATE INDEX Menus_Priority ON Menus ( Priority );
+CREATE INDEX Menus_IsBlocked ON Menus ( IsBlocked );
+CREATE INDEX Menus_ExternalId ON Menus ( ExternalId );
+CREATE INDEX Menus_IsShowOnMain ON Menus ( IsShowOnMain );
+-- CREATE INDEX Menus_??? ON Menus ( ??? );
+
 
