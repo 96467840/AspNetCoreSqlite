@@ -8,9 +8,11 @@ namespace AspNetCoreSqlite.DBModels
     public partial class StorageContext : DbContext
     {
         public virtual DbSet<Menus> Menus { get; set; }
+        public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Sites> Sites { get; set; }
         public virtual DbSet<UserSites> UserSites { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +46,7 @@ namespace AspNetCoreSqlite.DBModels
                 entity.Property(e => e.Content).HasColumnType("text");
 
                 entity.Property(e => e.Created)
+                    .IsRequired()
                     .HasColumnType("TIMESTAMP")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -178,6 +181,87 @@ namespace AspNetCoreSqlite.DBModels
                     .OnDelete(DeleteBehavior.SetNull);
             });
 
+            modelBuilder.Entity<News>(entity =>
+            {
+                entity.HasIndex(e => e.Date)
+                    .HasName("News_Date");
+
+                entity.HasIndex(e => e.ExternalId)
+                    .HasName("News_ExternalId");
+
+                entity.HasIndex(e => e.IsBlocked)
+                    .HasName("News_IsBlocked");
+
+                entity.HasIndex(e => e.Page)
+                    .HasName("News_Page");
+
+                entity.HasIndex(e => e.SiteId)
+                    .HasName("News_SiteId");
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Content).HasColumnType("text");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasColumnType("varchar(1024)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.ExternalId)
+                    .HasColumnType("varchar(100)")
+                    .HasDefaultValueSql("NULL");
+
+                entity.Property(e => e.Image)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.InFb)
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("1");
+
+                entity.Property(e => e.InVk)
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("1");
+
+                entity.Property(e => e.InWww)
+                    .HasColumnName("InWWW")
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("1");
+
+                entity.Property(e => e.IsBlocked)
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("0");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasColumnType("varchar(512)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.Page)
+                    .IsRequired()
+                    .HasColumnType("varchar(255)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.Search).HasColumnType("text");
+
+                entity.Property(e => e.SeoDescription)
+                    .HasColumnType("varchar(1024)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.SeoKeywords)
+                    .HasColumnType("varchar(1024)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.SeoTitle)
+                    .HasColumnType("varchar(255)")
+                    .HasDefaultValueSql("''");
+
+                entity.Property(e => e.SiteId).HasColumnType("integer");
+            });
+
             modelBuilder.Entity<Sites>(entity =>
             {
                 entity.HasIndex(e => e.ExternalId)
@@ -194,6 +278,7 @@ namespace AspNetCoreSqlite.DBModels
                 entity.Property(e => e.ContactsShort).HasColumnType("text");
 
                 entity.Property(e => e.Created)
+                    .IsRequired()
                     .HasColumnType("TIMESTAMP")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
@@ -280,6 +365,9 @@ namespace AspNetCoreSqlite.DBModels
                 entity.HasIndex(e => e.IsAdmin)
                     .HasName("UserSites_IsAdmin");
 
+                entity.HasIndex(e => e.SiteId)
+                    .HasName("IX_UserSites_SiteId");
+
                 entity.Property(e => e.IsAdmin)
                     .HasColumnType("tinyint")
                     .HasDefaultValueSql("0");
@@ -314,6 +402,7 @@ namespace AspNetCoreSqlite.DBModels
                     .IsUnique();
 
                 entity.Property(e => e.Created)
+                    .IsRequired()
                     .HasColumnType("TIMESTAMP")
                     .HasDefaultValueSql("CURRENT_TIMESTAMP");
 

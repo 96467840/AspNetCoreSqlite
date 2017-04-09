@@ -28,3 +28,26 @@ get-help Scaffold-DbContext -detailed
 миграции (вызывать в консоли в папке src/AspNetCoreSqlite)
 dotnet ef migrations add InitialCreate
 dotnet ef database update
+
+dotnet ef migrations add News
+dotnet ef database update
+
+алгоритм обновлени€ Ѕƒ (пока сложновато все - думаю как оптимизирвоать и автоматизировать)
+0. комит (чтобы миграци€ шла обособлено и в случае чего тупо откат и заново)
+1. накатываем изменени€ в Ѕƒ (запросом, редактором)
+2. обновл€ем модели в коде
+	a. сначала вытаскиваем с помощью Scaffold-DbContext
+		Scaffold-DbContext "Filename=D:/sqlite/_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force -Verbose
+	b. измен€ем AspNetCoreComponentLibrary/Entities
+	c. удал€ем сущности из AspNetCoreSqlite/DBModels (оставл€ем тока StorageContext)
+	d. приводим в пор€док StorageContext (херим метод OnConfiguring и добавл€ем using AspNetCoreComponentLibrary;)
+3. создаем миграцию
+	dotnet ef migrations add [Migration Name]
+4. самое глупое это приводим Ѕƒ в состо€ние до пункта 1. (иначе на 5 шаге будет fail) 
+	надо попробовать вариант с ручной записью в таблицу __EFMigrationsHistory
+	Ќќ таким образом мы не сможем проверить, а накатываетс€ ли наша миграци€ или нет (есть ньюансы! один из них указать у пол€ ограничение unique и все накрываетс€. ef пытаетс€ создать индекс с автоматическим именем и ломаетс€)
+5. обновл€ем Ѕƒ из миграции
+	dotnet ef database update
+6. в случае успеха комит
+
+если пропускать 4 и 5 пункты, то будет пиздец когда будет несколько программистов - будет невозможно накатить чужие миграции так как будет происходит фэйл на своих же

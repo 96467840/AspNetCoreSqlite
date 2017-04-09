@@ -132,4 +132,34 @@ CREATE INDEX Menus_ExternalId ON Menus ( ExternalId );
 CREATE INDEX Menus_IsShowOnMain ON Menus ( IsShowOnMain );
 -- CREATE INDEX Menus_??? ON Menus ( ??? );
 
+CREATE TABLE News (
+  ID INTEGER PRIMARY KEY,
 
+  SiteId integer NOT NULL,
+
+  Name varchar(512) NOT NULL default '',
+  Description varchar(1024) NOT NULL default '',
+  Content text,
+  Date datetime,
+
+  IsBlocked tinyint NOT NULL DEFAULT 0,
+  InWWW tinyint NOT NULL DEFAULT 1,
+  InVk tinyint NOT NULL DEFAULT 1,
+  InFb tinyint NOT NULL DEFAULT 1,
+
+  Page varchar(255) NOT NULL DEFAULT '',
+  Image varchar(255) NOT NULL DEFAULT '',
+--  GalleryId INTEGER DEFAULT NULL,
+  Search text,
+  SeoTitle varchar(255) DEFAULT '',
+  SeoKeywords varchar(1024) DEFAULT '',
+  SeoDescription varchar(1024) DEFAULT '',
+  ExternalId varchar(100) DEFAULT NULL
+);
+
+-- CREATE INDEX News_ ON News ( );
+CREATE INDEX News_SiteId ON News ( SiteId );
+CREATE INDEX News_Page ON News ( Page );
+CREATE INDEX News_Date ON News ( Date );
+CREATE INDEX News_IsBlocked ON News ( IsBlocked );
+CREATE INDEX News_ExternalId ON News ( ExternalId );
