@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -42,17 +43,23 @@ namespace AspNetCoreSqlite
             _logger.LogInformation(message, args);
         }/**/
 
-        public void ConnectToSiteDB(long siteid)
+        private StorageContext getContextForSite(long siteid)
         {
             try
             {
                 //LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
-                StorageContextSite = new StorageContext(string.Format(_optionsAccessor.Value.ConnectionStringSite, siteid), _loggerFactory);
+                return new StorageContext(string.Format(_optionsAccessor.Value.ConnectionStringSite, siteid), _loggerFactory);
             }
             catch (Exception e)
             {
                 _logger.LogCritical("Can't connect to DB: {0}", e);
+                return null;
             }
+        }
+
+        public void ConnectToSiteDB(long siteid)
+        {
+            StorageContextSite = getContextForSite(siteid);
         }
 
         public T GetRepository<T>(bool SiteStorage) where T : IRepositorySetStorageContext
@@ -84,12 +91,17 @@ namespace AspNetCoreSqlite
         }
 
         // данный код выполняется при запуске сайта и обновляет все БД сайтов
-        public void UpdateDBs()
+        public async void UpdateDBs()
         {
-
+            _logger.LogInformation("UpdateDBs ...");
             StorageContext.Database.Migrate();
             // теперь можем получить список сайтов и обновить все БД
-            // ...
+            var sites = GetRepository<ISiteRepository>(false);
+            foreach (var siteid in sites.StartQuery().Select(i=>i.Id.Value))
+            {
+                _logger.LogInformation("UpdateDBs for {0}...", siteid);
+                await getContextForSite(siteid).Database.MigrateAsync();
+            }
 
         }
     }
