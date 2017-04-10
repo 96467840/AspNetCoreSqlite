@@ -1,61 +1,65 @@
-установить https://system.data.sqlite.org/index.html/doc/trunk/www/downloads.wiki
-поставил (Setups for 64-bit Windows (.NET Framework 4.6))
-удалил. трабла в другом: Startup project 'src\AspNetCoreSqlite' targets framework '.NETStandard'. This framework is not intended for execution and may fail to resolve runtime dependencies. If so, select a different startup project and try again.
+СѓСЃС‚Р°РЅРѕРІРёС‚СЊ https://system.data.sqlite.org/index.html/doc/trunk/www/downloads.wiki
+РїРѕСЃС‚Р°РІРёР» (Setups for 64-bit Windows (.NET Framework 4.6))
+СѓРґР°Р»РёР». С‚СЂР°Р±Р»Р° РІ РґСЂСѓРіРѕРј: Startup project 'src\AspNetCoreSqlite' targets framework '.NETStandard'. This framework is not intended for execution and may fail to resolve runtime dependencies. If so, select a different startup project and try again.
 
-решение создать консольное приложение и тягать БД в него. как обычно через Жопу!
+СЂРµС€РµРЅРёРµ СЃРѕР·РґР°С‚СЊ РєРѕРЅСЃРѕР»СЊРЅРѕРµ РїСЂРёР»РѕР¶РµРЅРёРµ Рё С‚СЏРіР°С‚СЊ Р‘Р” РІ РЅРµРіРѕ. РєР°Рє РѕР±С‹С‡РЅРѕ С‡РµСЂРµР· Р–РѕРїСѓ!
 
 Install-Package Microsoft.EntityFrameworkCore.Sqlite
 Install-Package Microsoft.EntityFrameworkCore.Tools
 Install-Package Microsoft.EntityFrameworkCore.Sqlite.Design
 
 
-вытащить БД
+РІС‹С‚Р°С‰РёС‚СЊ Р‘Р”
 Scaffold-DbContext "Filename=..\AspNetCore\_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels
 Scaffold-DbContext "Filename=D:/sqlite/_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force -Verbose
 
 
 
-документация 
+РґРѕРєСѓРјРµРЅС‚Р°С†РёСЏ 
 https://docs.microsoft.com/en-us/aspnet/core/data/ef-mvc/intro
 https://docs.microsoft.com/ru-ru/ef/core/index
 
-статья на русском "Доступ к данным - EF7-миграции: не новые, но определенно улучшенные"
+СЃС‚Р°С‚СЊСЏ РЅР° СЂСѓСЃСЃРєРѕРј "Р”РѕСЃС‚СѓРї Рє РґР°РЅРЅС‹Рј - EF7-РјРёРіСЂР°С†РёРё: РЅРµ РЅРѕРІС‹Рµ, РЅРѕ РѕРїСЂРµРґРµР»РµРЅРЅРѕ СѓР»СѓС‡С€РµРЅРЅС‹Рµ"
 https://msdn.microsoft.com/ru-ru/magazine/mt614250.aspx
 
 get-help Scaffold-DbContext
 get-help Scaffold-DbContext -detailed
 
-миграции (вызывать в консоли в папке src/AspNetCoreSqlite)
+РјРёРіСЂР°С†РёРё (РІС‹Р·С‹РІР°С‚СЊ РІ РєРѕРЅСЃРѕР»Рё РІ РїР°РїРєРµ src/AspNetCoreSqlite)
 dotnet ef migrations add InitialCreate
 dotnet ef database update
 
 dotnet ef migrations add News
 dotnet ef database update
 
-алгоритм обновления БД (пока сложновато все - думаю как оптимизирвоать и автоматизировать)
-0. комит (чтобы миграция шла обособлено и в случае чего тупо откат и заново)
-1. накатываем изменения в БД (запросом, редактором) (которая у нас основная "_db.sqlite". БД сайтов обновим автоматически при запуске)
-2. обновляем модели в коде
-	a. сначала вытаскиваем с помощью Scaffold-DbContext
+Р°Р»РіРѕСЂРёС‚Рј РѕР±РЅРѕРІР»РµРЅРёСЏ Р‘Р” (РїРѕРєР° СЃР»РѕР¶РЅРѕРІР°С‚Рѕ РІСЃРµ - РґСѓРјР°СЋ РєР°Рє РѕРїС‚РёРјРёР·РёСЂРІРѕР°С‚СЊ Рё Р°РІС‚РѕРјР°С‚РёР·РёСЂРѕРІР°С‚СЊ)
+0. РєРѕРјРёС‚ (С‡С‚РѕР±С‹ РјРёРіСЂР°С†РёСЏ С€Р»Р° РѕР±РѕСЃРѕР±Р»РµРЅРѕ Рё РІ СЃР»СѓС‡Р°Рµ С‡РµРіРѕ С‚СѓРїРѕ РѕС‚РєР°С‚ Рё Р·Р°РЅРѕРІРѕ)
+1. РЅР°РєР°С‚С‹РІР°РµРј РёР·РјРµРЅРµРЅРёСЏ РІ Р‘Р” (Р·Р°РїСЂРѕСЃРѕРј, СЂРµРґР°РєС‚РѕСЂРѕРј) (РєРѕС‚РѕСЂР°СЏ Сѓ РЅР°СЃ РѕСЃРЅРѕРІРЅР°СЏ "_db.sqlite". Р‘Р” СЃР°Р№С‚РѕРІ РѕР±РЅРѕРІРёРј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРё РїСЂРё Р·Р°РїСѓСЃРєРµ)
+2. РѕР±РЅРѕРІР»СЏРµРј РјРѕРґРµР»Рё РІ РєРѕРґРµ
+	a. СЃРЅР°С‡Р°Р»Р° РІС‹С‚Р°СЃРєРёРІР°РµРј СЃ РїРѕРјРѕС‰СЊСЋ Scaffold-DbContext
 		Scaffold-DbContext "Filename=D:/sqlite/_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force -Verbose
-	b. изменяем AspNetCoreComponentLibrary/Entities
-	c. удаляем сущности из AspNetCoreSqlite/DBModels (оставляем тока StorageContext)
-	d. приводим в порядок StorageContext (херим метод OnConfiguring и добавляем using AspNetCoreComponentLibrary;)
-3. создаем миграцию
+	b. РёР·РјРµРЅСЏРµРј AspNetCoreComponentLibrary/Entities
+	c. СѓРґР°Р»СЏРµРј СЃСѓС‰РЅРѕСЃС‚Рё РёР· AspNetCoreSqlite/DBModels (РѕСЃС‚Р°РІР»СЏРµРј С‚РѕРєР° StorageContext)
+	d. РїСЂРёРІРѕРґРёРј РІ РїРѕСЂСЏРґРѕРє StorageContext (С…РµСЂРёРј РјРµС‚РѕРґ OnConfiguring Рё РґРѕР±Р°РІР»СЏРµРј using AspNetCoreComponentLibrary;)
+3. СЃРѕР·РґР°РµРј РјРёРіСЂР°С†РёСЋ
 	dotnet ef migrations add [Migration Name]
-4. самое глупое это приводим БД в состояние до пункта 1. (иначе на 5 шаге будет fail) 
-	надо попробовать вариант с ручной записью в таблицу __EFMigrationsHistory
-	НО таким образом мы не сможем проверить, а накатывается ли наша миграция или нет (есть ньюансы! один из них указать у поля ограничение unique и все накрывается. ef пытается создать индекс с автоматическим именем и ломается)
-5. обновляем БД из миграции
+4. СЃР°РјРѕРµ РіР»СѓРїРѕРµ СЌС‚Рѕ РїСЂРёРІРѕРґРёРј Р‘Р” РІ СЃРѕСЃС‚РѕСЏРЅРёРµ РґРѕ РїСѓРЅРєС‚Р° 1. (РёРЅР°С‡Рµ РЅР° 5 С€Р°РіРµ Р±СѓРґРµС‚ fail) 
+	РЅР°РґРѕ РїРѕРїСЂРѕР±РѕРІР°С‚СЊ РІР°СЂРёР°РЅС‚ СЃ СЂСѓС‡РЅРѕР№ Р·Р°РїРёСЃСЊСЋ РІ С‚Р°Р±Р»РёС†Сѓ __EFMigrationsHistory
+	РќРћ С‚Р°РєРёРј РѕР±СЂР°Р·РѕРј РјС‹ РЅРµ СЃРјРѕР¶РµРј РїСЂРѕРІРµСЂРёС‚СЊ, Р° РЅР°РєР°С‚С‹РІР°РµС‚СЃСЏ Р»Рё РЅР°С€Р° РјРёРіСЂР°С†РёСЏ РёР»Рё РЅРµС‚ (РµСЃС‚СЊ РЅСЊСЋР°РЅСЃС‹! РѕРґРёРЅ РёР· РЅРёС… СѓРєР°Р·Р°С‚СЊ Сѓ РїРѕР»СЏ РѕРіСЂР°РЅРёС‡РµРЅРёРµ unique Рё РІСЃРµ РЅР°РєСЂС‹РІР°РµС‚СЃСЏ. ef РїС‹С‚Р°РµС‚СЃСЏ СЃРѕР·РґР°С‚СЊ РёРЅРґРµРєСЃ СЃ Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёРј РёРјРµРЅРµРј Рё Р»РѕРјР°РµС‚СЃСЏ)
+5. РѕР±РЅРѕРІР»СЏРµРј Р‘Р” РёР· РјРёРіСЂР°С†РёРё
 	dotnet ef database update
-6. в случае успеха комит
+6. РІ СЃР»СѓС‡Р°Рµ СѓСЃРїРµС…Р° РєРѕРјРёС‚
 
-если пропускать 4 и 5 пункты, то будет пиздец когда будет несколько программистов - будет невозможно накатить чужие миграции так как будет происходит фэйл на своих же
+РµСЃР»Рё РїСЂРѕРїСѓСЃРєР°С‚СЊ 4 Рё 5 РїСѓРЅРєС‚С‹, С‚Рѕ Р±СѓРґРµС‚ РїРёР·РґРµС† РєРѕРіРґР° Р±СѓРґРµС‚ РЅРµСЃРєРѕР»СЊРєРѕ РїСЂРѕРіСЂР°РјРјРёСЃС‚РѕРІ - Р±СѓРґРµС‚ РЅРµРІРѕР·РјРѕР¶РЅРѕ РЅР°РєР°С‚РёС‚СЊ С‡СѓР¶РёРµ РјРёРіСЂР°С†РёРё С‚Р°Рє РєР°Рє Р±СѓРґРµС‚ РїСЂРѕРёСЃС…РѕРґРёС‚ С„СЌР№Р» РЅР° СЃРІРѕРёС… Р¶Рµ
 
 
 -----------------
-удаление миграции
-1. если миграция уже в БД, то обновляем БД до последней хорошей миграции
+СѓРґР°Р»РµРЅРёРµ РјРёРіСЂР°С†РёРё
+1. РµСЃР»Рё РјРёРіСЂР°С†РёСЏ СѓР¶Рµ РІ Р‘Р”, С‚Рѕ РѕР±РЅРѕРІР»СЏРµРј Р‘Р” РґРѕ РїРѕСЃР»РµРґРЅРµР№ С…РѕСЂРѕС€РµР№ РјРёРіСЂР°С†РёРё
 dotnet ef database update InitialCreate
-2. удаляем миграцию (имя миграции не надо указывать - удаляем поштучно)
+2. СѓРґР°Р»СЏРµРј РјРёРіСЂР°С†РёСЋ (РёРјСЏ РјРёРіСЂР°С†РёРё РЅРµ РЅР°РґРѕ СѓРєР°Р·С‹РІР°С‚СЊ - СѓРґР°Р»СЏРµРј РїРѕС€С‚СѓС‡РЅРѕ)
 dotnet ef migrations remove
+
+----------------
+sql РІ РјРёРіСЂР°С†РёСЏС… 
+migrationBuilder.Sql("INSERT INTO dbo.Department (Name, Budget, StartDate) VALUES ('Temp', 0.00, GETDATE())");
