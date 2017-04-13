@@ -111,13 +111,13 @@ namespace AspNetCoreSqlite.Migrations
                     Created = table.Column<DateTime>(type: "TIMESTAMP", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     Email = table.Column<string>(type: "varchar(255)", nullable: false),
                     FbExpires = table.Column<string>(type: "datetime", nullable: true),
-                    FbId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    FbId = table.Column<string>(type: "varchar(255)", nullable: true),
                     FbToken = table.Column<string>(type: "varchar(255)", nullable: true),
                     Name = table.Column<string>(type: "varchar(255)", nullable: true),
                     Password = table.Column<string>(type: "varchar(255)", nullable: false),
-                    Token = table.Column<string>(type: "varchar(255)", nullable: false),
+                    Token = table.Column<string>(type: "varchar(255)", nullable: true),
                     VkExpires = table.Column<string>(type: "datetime", nullable: true),
-                    VkId = table.Column<string>(type: "varchar(255)", nullable: false),
+                    VkId = table.Column<string>(type: "varchar(255)", nullable: true),
                     VkToken = table.Column<string>(type: "varchar(255)", nullable: true)
                 },
                 constraints: table =>
