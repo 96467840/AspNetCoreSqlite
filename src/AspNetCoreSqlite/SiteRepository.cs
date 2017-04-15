@@ -15,6 +15,9 @@ namespace AspNetCoreSqlite
 {
     public class SiteRepository : SiteRepositoryProto, ISiteRepository
     {
-
+        public override void AfterSave(Sites item) {
+            Logger.LogInformation("SiteRepository AfterSave for {0}", item.Id);
+            (Storage.GetContextForSite(item.Id.Value) as StorageContext).Database.Migrate();
+        }
     }
 }

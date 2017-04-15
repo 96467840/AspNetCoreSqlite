@@ -43,7 +43,7 @@ namespace AspNetCoreSqlite
             _logger.LogInformation(message, args);
         }/**/
 
-        private StorageContext getContextForSite(long siteid)
+        public IStorageContext GetContextForSite(long siteid)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace AspNetCoreSqlite
 
         public void ConnectToSiteDB(long siteid)
         {
-            StorageContextSite = getContextForSite(siteid);
+            StorageContextSite = GetContextForSite(siteid) as StorageContext;
         }
 
         public T GetRepository<T>(bool SiteStorage) where T : IRepositorySetStorageContext
@@ -72,11 +72,11 @@ namespace AspNetCoreSqlite
                     T repository = (T)Activator.CreateInstance(type);
                     if (SiteStorage)
                     {
-                        repository.SetStorageContext(this.StorageContextSite, this);
+                        repository.SetStorageContext(this.StorageContextSite, this, _loggerFactory);
                     }
                     else
                     {
-                        repository.SetStorageContext(this.StorageContext, this);
+                        repository.SetStorageContext(this.StorageContext, this, _loggerFactory);
                     }
                     return repository;
                 }
@@ -100,7 +100,7 @@ namespace AspNetCoreSqlite
             foreach (var siteid in sites.StartQuery().Select(i=>i.Id.Value))
             {
                 _logger.LogInformation("UpdateDBs for {0}...", siteid);
-                await getContextForSite(siteid).Database.MigrateAsync();
+                await (GetContextForSite(siteid) as StorageContext).Database.MigrateAsync();
             }
 
         }
