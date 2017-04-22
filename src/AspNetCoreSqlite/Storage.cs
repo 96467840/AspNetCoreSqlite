@@ -72,6 +72,11 @@ namespace AspNetCoreSqlite
                     T repository = (T)Activator.CreateInstance(type);
                     if (db == EnumDB.Content)
                     {
+                        if (this.StorageContextContent == null)
+                        {
+                            _logger.LogCritical("Запрашиваемый репозиторий ({0}) не может быть получен до подключения к БД с контентом! Для начала надо выполнить подключение к БД сайта ConnectToSiteDB(siteid)", typeof(T).FullName);
+                            throw new Exception("Could't recive content Repository before connect to DB!");
+                        }
                         repository.SetStorageContext(this.StorageContextContent, this, _loggerFactory);
                     }
                     else
@@ -96,7 +101,7 @@ namespace AspNetCoreSqlite
             _logger.LogInformation("UpdateDBs ...");
             StorageContext.Database.Migrate();
             // теперь можем получить список сайтов и обновить все БД
-            var sites = GetRepository<ISiteRepository>(EnumDB.Content);
+            var sites = GetRepository<ISiteRepository>(EnumDB.UserSites);
             foreach (var siteid in sites.StartQuery().Select(i=>i.Id.Value))
             {
                 _logger.LogInformation("UpdateDBs for {0}...", siteid);
