@@ -20,7 +20,7 @@ namespace AspNetCoreSqlite
         private readonly ILoggerFactory _loggerFactory;
 
         public StorageContext StorageContext { get; private set; }
-        public StorageContext StorageContextSite { get; private set; }
+        public StorageContext StorageContextContent { get; private set; }
 
         public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor)
         {
@@ -59,10 +59,10 @@ namespace AspNetCoreSqlite
 
         public void ConnectToSiteDB(long siteid)
         {
-            StorageContextSite = GetContextForSite(siteid) as StorageContext;
+            StorageContextContent = GetContextForSite(siteid) as StorageContext;
         }
 
-        public T GetRepository<T>(bool SiteStorage) where T : IRepositorySetStorageContext
+        public T GetRepository<T>(EnumDB db) where T : IRepositorySetStorageContext
 
         {
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
@@ -70,9 +70,9 @@ namespace AspNetCoreSqlite
                 if (typeof(T).GetTypeInfo().IsAssignableFrom(type) && type.GetTypeInfo().IsClass)
                 {
                     T repository = (T)Activator.CreateInstance(type);
-                    if (SiteStorage)
+                    if (db == EnumDB.Content)
                     {
-                        repository.SetStorageContext(this.StorageContextSite, this, _loggerFactory);
+                        repository.SetStorageContext(this.StorageContextContent, this, _loggerFactory);
                     }
                     else
                     {
@@ -96,7 +96,7 @@ namespace AspNetCoreSqlite
             _logger.LogInformation("UpdateDBs ...");
             StorageContext.Database.Migrate();
             // теперь можем получить список сайтов и обновить все БД
-            var sites = GetRepository<ISiteRepository>(false);
+            var sites = GetRepository<ISiteRepository>(EnumDB.Content);
             foreach (var siteid in sites.StartQuery().Select(i=>i.Id.Value))
             {
                 _logger.LogInformation("UpdateDBs for {0}...", siteid);
