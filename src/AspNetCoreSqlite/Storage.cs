@@ -102,7 +102,7 @@ namespace AspNetCoreSqlite
             StorageContext.Database.Migrate();
             // теперь можем получить список сайтов и обновить все БД
             var sites = GetRepository<ISiteRepository>(EnumDB.UserSites);
-            foreach (var siteid in sites.StartQuery().Select(i=>i.Id.Value))
+            foreach (var siteid in sites.StartQuery().Select(i=>i.Id))
             {
                 _logger.LogInformation("UpdateDBs for {0}...", siteid);
                 await (GetContextForSite(siteid) as StorageContext).Database.MigrateAsync();
