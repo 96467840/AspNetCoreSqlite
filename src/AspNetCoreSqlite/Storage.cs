@@ -15,26 +15,28 @@ namespace AspNetCoreSqlite
 {
     public class Storage : IStorage
     {
-        public readonly ILogger<Storage> _logger;
-        private readonly IOptions<SQLiteConfigure> _optionsAccessor;
-        private readonly ILoggerFactory _loggerFactory;
+        public readonly ILogger<Storage> Logger;
+        protected ILogger LoggerMEF;
+        private readonly IOptions<SQLiteConfigure> OptionsAccessor;
+        private readonly ILoggerFactory LoggerFactory;
 
         public StorageContext StorageContext { get; private set; }
         public StorageContext StorageContextContent { get; private set; }
 
         public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor)
         {
-            _logger = logger;
-            _optionsAccessor = optionsAccessor;
-            _loggerFactory = loggerFactory;
+            Logger = logger;
+            OptionsAccessor = optionsAccessor;
+            LoggerFactory = loggerFactory;
+            LoggerMEF = loggerFactory.CreateLogger(Utils.MEFNameSpace);
             try
             {
                 //LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
-                StorageContext = new StorageContext(_optionsAccessor.Value.ConnectionString, loggerFactory);
+                StorageContext = new StorageContext(OptionsAccessor.Value.ConnectionString, loggerFactory);
             }
             catch (Exception e)
             {
-                _logger.LogCritical("Can't connect to DB: {0}", e);
+                Logger.LogCritical("Can't connect to DB: {0}", e);
             }
         }
 
@@ -48,11 +50,11 @@ namespace AspNetCoreSqlite
             try
             {
                 //LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
-                return new StorageContext(string.Format(_optionsAccessor.Value.ConnectionStringSite, siteid), _loggerFactory);
+                return new StorageContext(string.Format(OptionsAccessor.Value.ConnectionStringSite, siteid), LoggerFactory);
             }
             catch (Exception e)
             {
-                _logger.LogCritical("Can't connect to DB: {0}", e);
+                Logger.LogCritical("Can't connect to DB: {0}", e);
                 return null;
             }
         }
@@ -72,39 +74,43 @@ namespace AspNetCoreSqlite
                     T repository = (T)Activator.CreateInstance(type);
                     if (db == EnumDB.Content)
                     {
-                        if (this.StorageContextContent == null)
+                        if (StorageContextContent == null)
                         {
-                            _logger.LogCritical("Запрашиваемый репозиторий ({0}) не может быть получен до подключения к БД с контентом! Для начала надо выполнить подключение к БД сайта ConnectToSiteDB(siteid)", typeof(T).FullName);
+                            Logger.LogCritical("Запрашиваемый репозиторий ({0}) не может быть получен до подключения к БД с контентом! Для начала надо выполнить подключение к БД сайта ConnectToSiteDB(siteid)", typeof(T).FullName);
                             throw new Exception("Could't recive content Repository before connect to DB!");
                         }
-                        repository.SetStorageContext(this.StorageContextContent, this, _loggerFactory);
+                        repository.SetStorageContext(StorageContextContent, this, LoggerFactory);
                     }
                     else
                     {
-                        repository.SetStorageContext(this.StorageContext, this, _loggerFactory);
+                        repository.SetStorageContext(StorageContext, this, LoggerFactory);
                     }
                     return repository;
                 }
             }
-            _logger.LogCritical("Can't find repository {0}", typeof(T).FullName);
+            Logger.LogCritical("Can't find repository {0}", typeof(T).FullName);
             return default(T);
         }
 
         public void Save()
         {
-            this.StorageContext.SaveChangesAsync().Wait();
+            using (new BLog(LoggerMEF, "Save", "::::::::::>"))
+            {
+                //StorageContext.SaveChangesAsync().Wait();
+                StorageContext.SaveChanges();
+            }
         }
 
         // данный код выполняется при запуске сайта и обновляет все БД сайтов
         public async void UpdateDBs()
         {
-            _logger.LogInformation("UpdateDBs ...");
+            Logger.LogInformation("UpdateDBs ...");
             StorageContext.Database.Migrate();
             // теперь можем получить список сайтов и обновить все БД
             var sites = GetRepository<ISiteRepository>(EnumDB.UserSites);
             foreach (var siteid in sites.StartQuery().Select(i=>i.Id))
             {
-                _logger.LogInformation("UpdateDBs for {0}...", siteid);
+                Logger.LogInformation("UpdateDBs for {0}...", siteid);
                 await (GetContextForSite(siteid) as StorageContext).Database.MigrateAsync();
             }
 

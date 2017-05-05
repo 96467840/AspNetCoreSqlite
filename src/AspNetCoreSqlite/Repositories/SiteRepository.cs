@@ -16,6 +16,7 @@ namespace AspNetCoreSqlite
     public class SiteRepository : SiteRepositoryProto, ISiteRepository
     {
         public override void AfterSave(Sites item, bool isnew) {
+            base.AfterSave(item, isnew);
             Logger.LogTrace("SiteRepository AfterSave for {0}; isnew = {1}", item.Id, isnew);
             if (!isnew) return;
             (Storage.GetContextForSite(item.Id) as StorageContext).Database.Migrate();
