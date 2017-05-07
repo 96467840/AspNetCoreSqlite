@@ -65,7 +65,6 @@ namespace AspNetCoreSqlite
         }
 
         public T GetRepository<T>(EnumDB db) where T : IRepositorySetStorageContext
-
         {
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
             {
