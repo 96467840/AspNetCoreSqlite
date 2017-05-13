@@ -36,12 +36,12 @@ dotnet ef database update
 0. комит (чтобы миграция шла обособлено и в случае чего тупо откат и заново)
 1. накатываем изменения в БД (запросом, редактором) (которая у нас основная "_db.sqlite". БД сайтов обновим автоматически при запуске)
 2. обновляем модели в коде
-	a. сначала вытаскиваем с помощью Scaffold-DbContext
+	a. сначала вытаскиваем с помощью Scaffold-DbContext (в консоли диспетчера пакетов)
 		Scaffold-DbContext "Filename=D:/sqlite/_db.sqlite" Microsoft.EntityFrameworkCore.Sqlite -OutputDir DBModels -Context StorageContext -Force -Verbose
 	b. изменяем AspNetCoreComponentLibrary/Entities
 	c. удаляем сущности из AspNetCoreSqlite/DBModels (оставляем тока StorageContext)
 	d. приводим в порядок StorageContext (херим метод OnConfiguring и добавляем using AspNetCoreComponentLibrary;)
-3. создаем миграцию
+3. создаем миграцию (в обычной коносли в папке src/AspNetCoreSqlite)
 	dotnet ef migrations add [Migration Name]
 4. самое глупое это приводим БД в состояние до пункта 1. (иначе на 5 шаге будет fail) 
 	надо попробовать вариант с ручной записью в таблицу __EFMigrationsHistory
