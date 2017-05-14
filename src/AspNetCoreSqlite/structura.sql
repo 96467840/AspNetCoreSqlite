@@ -163,3 +163,27 @@ CREATE INDEX News_Page ON News ( Page );
 CREATE INDEX News_Date ON News ( Date );
 CREATE INDEX News_IsBlocked ON News ( IsBlocked );
 CREATE INDEX News_ExternalId ON News ( ExternalId );
+
+-- --------------------------------------------
+CREATE TABLE Languages (
+  Id INTEGER PRIMARY KEY,
+  SiteId integer NOT NULL,
+
+  Name varchar(255) DEFAULT NULL,
+  Lang varchar(17) NOT NULL,
+
+  IsDefault tinyint NOT NULL DEFAULT 0,
+  IsBlocked tinyint NOT NULL DEFAULT 0,
+
+  Json text,
+  
+  ExternalId varchar(100) DEFAULT NULL
+);
+
+-- CREATE INDEX Languages_ ON Languages (  );
+CREATE INDEX Languages_Lang ON Languages ( Lang );
+CREATE INDEX Languages_SiteId ON Languages ( SiteId );
+CREATE INDEX Languages_IsDefault ON Languages ( IsDefault );
+CREATE INDEX Languages_IsBlocked ON Languages ( IsBlocked );
+CREATE INDEX Languages_ExternalId ON Languages ( ExternalId );
+CREATE UNIQUE INDEX Languages_SiteLang ON Languages ( SiteId, Lang );

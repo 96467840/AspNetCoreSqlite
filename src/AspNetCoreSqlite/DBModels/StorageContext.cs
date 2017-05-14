@@ -7,6 +7,7 @@ namespace AspNetCoreSqlite.DBModels
 {
     public partial class StorageContext : DbContext
     {
+        public virtual DbSet<Languages> Languages { get; set; }
         public virtual DbSet<Menus> Menus { get; set; }
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Sites> Sites { get; set; }
@@ -15,6 +16,52 @@ namespace AspNetCoreSqlite.DBModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Languages>(entity =>
+            {
+                entity.HasIndex(e => e.ExternalId)
+                    .HasName("Languages_ExternalId");
+
+                entity.HasIndex(e => e.IsBlocked)
+                    .HasName("Languages_IsBlocked");
+
+                entity.HasIndex(e => e.IsDefault)
+                    .HasName("Languages_IsDefault");
+
+                entity.HasIndex(e => e.Lang)
+                    .HasName("Languages_Lang");
+
+                entity.HasIndex(e => e.SiteId)
+                    .HasName("Languages_SiteId");
+
+                entity.HasIndex(e => new { e.SiteId, e.Lang })
+                    .HasName("Languages_SiteLang")
+                    .IsUnique();
+
+                entity.Property(e => e.ExternalId)
+                    .HasColumnType("varchar(100)")
+                    .HasDefaultValueSql("NULL");
+
+                entity.Property(e => e.IsBlocked)
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("0");
+
+                entity.Property(e => e.IsDefault)
+                    .HasColumnType("tinyint")
+                    .HasDefaultValueSql("0");
+
+                entity.Property(e => e.Json).HasColumnType("text");
+
+                entity.Property(e => e.Lang)
+                    .IsRequired()
+                    .HasColumnType("varchar(17)");
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("varchar(255)")
+                    .HasDefaultValueSql("NULL");
+
+                entity.Property(e => e.SiteId).HasColumnType("integer");
+            });
+
             modelBuilder.Entity<Menus>(entity =>
             {
                 entity.HasIndex(e => e.ExternalId)
