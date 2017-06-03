@@ -26,6 +26,7 @@ namespace AspNetCoreSqlite
         public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor)
         {
             Logger = logger;
+            Logger.LogTrace("Sqlite Storage::Constructor");
             OptionsAccessor = optionsAccessor;
             LoggerFactory = loggerFactory;
             LoggerMEF = loggerFactory.CreateLogger(Utils.MEFNameSpace);
@@ -39,11 +40,6 @@ namespace AspNetCoreSqlite
                 Logger.LogCritical("Can't connect to DB: {0}", e);
             }
         }
-
-        /*public void LogInformation(string message, params object[] args)
-        {
-            _logger.LogInformation(message, args);
-        }/**/
 
         public IStorageContext GetContextForSite(long siteid)
         {
@@ -64,8 +60,14 @@ namespace AspNetCoreSqlite
             StorageContextContent = GetContextForSite(siteid) as StorageContext;
         }
 
-        public T GetRepository<T>(EnumDB db) where T : IRepositorySetStorageContext
+        // кеш репозиториев. не делаем его статиком -> на каждый запрос будет своя копия
+        private Dictionary<string, IRepositorySetStorageContext> _cacheRepos = new Dictionary<string, IRepositorySetStorageContext>();
+        public T GetRepository<T>(EnumDB db, bool enableCache=true) where T : IRepositorySetStorageContext
         {
+            var cacheKey = db + " " + typeof(T).FullName;
+            Logger.LogTrace("Storage::GetRepository {cache} {type} {key}", _cacheRepos.ContainsKey(cacheKey), typeof(T).FullName, cacheKey);
+            if (enableCache && _cacheRepos.ContainsKey(cacheKey)) return (T)_cacheRepos[cacheKey];
+
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
             {
                 if (typeof(T).GetTypeInfo().IsAssignableFrom(type) && type.GetTypeInfo().IsClass)
@@ -84,6 +86,8 @@ namespace AspNetCoreSqlite
                     {
                         repository.SetStorageContext(StorageContext, this, LoggerFactory);
                     }
+                    // в кеш помещаем тока если разрешено брать из кеша. 
+                    if (enableCache) _cacheRepos[cacheKey] = repository;
                     return repository;
                 }
             }
