@@ -19,17 +19,19 @@ namespace AspNetCoreSqlite
         protected ILogger LoggerMEF;
         private readonly IOptions<SQLiteConfigure> OptionsAccessor;
         private readonly ILoggerFactory LoggerFactory;
+        private readonly ILocalizer2Garin Localizer2Garin;
 
         public StorageContext StorageContext { get; private set; }
         public StorageContext StorageContextContent { get; private set; }
 
-        public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor)
+        public Storage(ILogger<Storage> logger, ILoggerFactory loggerFactory, IOptions<SQLiteConfigure> optionsAccessor, ILocalizer2Garin localizer2Garin)
         {
             Logger = logger;
             Logger.LogTrace("Sqlite Storage::Constructor");
             OptionsAccessor = optionsAccessor;
             LoggerFactory = loggerFactory;
             LoggerMEF = loggerFactory.CreateLogger(Utils.MEFNameSpace);
+            Localizer2Garin = localizer2Garin;
             try
             {
                 //LogInformation("Connection string={0}", optionsAccessor.Value.ConnectionString);
@@ -61,11 +63,12 @@ namespace AspNetCoreSqlite
         }
 
         // кеш репозиториев. не делаем его статиком -> на каждый запрос будет своя копия
+        // для оптимизации рефлексии можно ее закешировать, но пока не будем так глубоко
         private Dictionary<string, IRepositorySetStorageContext> _cacheRepos = new Dictionary<string, IRepositorySetStorageContext>();
         public T GetRepository<T>(EnumDB db, bool enableCache=true) where T : IRepositorySetStorageContext
         {
             var cacheKey = db + " " + typeof(T).FullName;
-            Logger.LogTrace("Storage::GetRepository {cache} {type} {key}", _cacheRepos.ContainsKey(cacheKey), typeof(T).FullName, cacheKey);
+            Logger.LogTrace("Storage::GetRepository incache={cache} type={type} key=[{key}]", _cacheRepos.ContainsKey(cacheKey), typeof(T).FullName, cacheKey);
             if (enableCache && _cacheRepos.ContainsKey(cacheKey)) return (T)_cacheRepos[cacheKey];
 
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
@@ -80,11 +83,11 @@ namespace AspNetCoreSqlite
                             Logger.LogCritical("Запрашиваемый репозиторий ({0}) не может быть получен до подключения к БД с контентом! Для начала надо выполнить подключение к БД сайта ConnectToSiteDB(siteid)", typeof(T).FullName);
                             throw new Exception("Could't recive content Repository before connect to DB!");
                         }
-                        repository.SetStorageContext(StorageContextContent, this, LoggerFactory);
+                        repository.SetStorageContext(StorageContextContent, this, LoggerFactory, Localizer2Garin);
                     }
                     else
                     {
-                        repository.SetStorageContext(StorageContext, this, LoggerFactory);
+                        repository.SetStorageContext(StorageContext, this, LoggerFactory, Localizer2Garin);
                     }
                     // в кеш помещаем тока если разрешено брать из кеша. 
                     if (enableCache) _cacheRepos[cacheKey] = repository;
