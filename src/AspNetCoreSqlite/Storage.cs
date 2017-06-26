@@ -68,7 +68,7 @@ namespace AspNetCoreSqlite
         public T GetRepository<T>(EnumDB db, bool enableCache=true) where T : IRepositorySetStorageContext
         {
             var cacheKey = db + " " + typeof(T).FullName;
-            Logger.LogTrace("Storage::GetRepository incache={cache} type={type} key=[{key}]", _cacheRepos.ContainsKey(cacheKey), typeof(T).FullName, cacheKey);
+            Logger.LogTrace("Storage::GetRepository CacheExists={cache} type={type} key=[{key}]", _cacheRepos.ContainsKey(cacheKey), typeof(T).Name, cacheKey);
             if (enableCache && _cacheRepos.ContainsKey(cacheKey)) return (T)_cacheRepos[cacheKey];
 
             foreach (Type type in this.GetType().GetTypeInfo().Assembly.GetTypes())
