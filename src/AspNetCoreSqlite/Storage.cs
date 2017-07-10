@@ -62,6 +62,14 @@ namespace AspNetCoreSqlite
             StorageContextContent = GetContextForSite(siteid) as StorageContext;
         }
 
+        public IGetOptions GetOptionsRepository(Type type, EnumDB db, bool enableCache = true)
+        {
+            var t = GetType();
+            var method = t.GetMethod("GetRepository", new Type[] { typeof(EnumDB), typeof(bool) });
+            return (IGetOptions)method.MakeGenericMethod(type).Invoke(this, new object[] { db, enableCache });
+            //return null;
+        }
+
         // кеш репозиториев. не делаем его статиком -> на каждый запрос будет своя копия
         // для оптимизации рефлексии можно ее закешировать, но пока не будем так глубоко
         private Dictionary<string, IRepositorySetStorageContext> _cacheRepos = new Dictionary<string, IRepositorySetStorageContext>();
@@ -98,12 +106,19 @@ namespace AspNetCoreSqlite
             return default(T);
         }
 
-        public void Save()
+        public void Save(EnumDB db)
         {
             using (new BLog(LoggerMEF, "Save", "::::::::::>"))
             {
                 //StorageContext.SaveChangesAsync().Wait();
-                StorageContext.SaveChanges();
+                if (db == EnumDB.Content)
+                {
+                    StorageContextContent.SaveChanges();
+                }
+                else
+                {
+                    StorageContext.SaveChanges();
+                }
             }
         }
 
